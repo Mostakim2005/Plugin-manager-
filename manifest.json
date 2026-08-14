@@ -1,11 +1,9 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.0",
-	"minAppVersion": "1.0.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
-	"isDesktopOnly": false
+  "id": "plugin-manager-sidebar",
+  "name": "Plugin Manager Sidebar",
+  "version": "1.1.0",
+  "minAppVersion": "1.1.0",
+  "description": "Manage community plugins from a clean sidebar: search, enable, disable, pin, reorder, edit details, and uninstall.",
+  "author": "Your Name",
+  "isDesktopOnly": false
 }

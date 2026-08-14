@@ -1,8 +1,397 @@
-/*
+/* Plugin Manager Sidebar
+ * Theme-compatible, minimal UI. All classes are prefixed to avoid collisions.
+ */
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.pms-view {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 14px;
+  overflow-y: auto;
+  color: var(--text-normal);
+  background: var(--background-primary);
+}
 
-If your plugin does not need CSS, delete this file.
+.pms-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding-bottom: 12px;
+  background: var(--background-primary);
+}
 
-*/
+.pms-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.pms-title-group {
+  min-width: 0;
+}
+
+.pms-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.pms-subtitle {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.pms-icon-button,
+.pms-action-button,
+.pms-pin-button,
+.pms-delete-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 7px;
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+}
+
+.pms-icon-button:hover,
+.pms-action-button:hover,
+.pms-pin-button:hover {
+  border-color: var(--background-modifier-border-hover);
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.pms-icon-button:active,
+.pms-action-button:active,
+.pms-pin-button:active,
+.pms-delete-button:active {
+  transform: translateY(1px);
+}
+
+.pms-search-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 9px;
+}
+
+.pms-search-icon {
+  position: absolute;
+  left: 10px;
+  z-index: 1;
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+.pms-search-input {
+  width: 100%;
+  height: 34px;
+  box-sizing: border-box;
+  padding: 0 10px 0 30px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 9px;
+  outline: none;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  box-shadow: none;
+}
+
+.pms-search-input:focus {
+  border-color: var(--interactive-accent);
+}
+
+.pms-summary {
+  display: flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 0 2px;
+  color: var(--text-muted);
+  font-size: 0.73rem;
+}
+
+.pms-summary-count {
+  font-weight: 600;
+  color: var(--text-normal);
+}
+
+.pms-summary-separator {
+  margin: 0 6px;
+  color: var(--text-faint);
+}
+
+.pms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pms-item {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 11px;
+  background: var(--background-secondary);
+  overflow: hidden;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.pms-item:hover {
+  border-color: var(--background-modifier-border-hover);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.pms-item-main {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px;
+}
+
+.pms-item-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pms-item-title-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.pms-plugin-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.86rem;
+}
+
+.pms-status {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.pms-status.is-enabled {
+  background: color-mix(in srgb, var(--interactive-accent) 12%, transparent);
+  color: var(--interactive-accent);
+}
+
+.pms-status.is-disabled {
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+}
+
+.pms-plugin-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin-top: 3px;
+  color: var(--text-faint);
+  font-size: 0.65rem;
+}
+
+.pms-plugin-id {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pms-plugin-version {
+  flex: 0 0 auto;
+}
+
+.pms-plugin-description {
+  display: -webkit-box;
+  margin-top: 5px;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.73rem;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.pms-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.pms-pin-button.is-pinned {
+  border-color: var(--interactive-accent);
+  background: color-mix(in srgb, var(--interactive-accent) 10%, var(--background-secondary));
+  color: var(--interactive-accent);
+}
+
+.pms-delete-button {
+  color: var(--text-error);
+}
+
+.pms-delete-button:hover {
+  border-color: var(--text-error);
+  background: color-mix(in srgb, var(--text-error) 10%, transparent);
+  color: var(--text-error);
+}
+
+.pms-toggle {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.pms-toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.pms-toggle-track {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  box-sizing: border-box;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 999px;
+  background: var(--background-modifier-border);
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.pms-toggle-track::after {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--background-primary);
+  content: "";
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  transition: transform 140ms ease;
+}
+
+.pms-toggle input:checked + .pms-toggle-track {
+  border-color: var(--interactive-accent);
+  background: var(--interactive-accent);
+}
+
+.pms-toggle input:checked + .pms-toggle-track::after {
+  transform: translateX(14px);
+}
+
+.pms-toggle input:focus-visible + .pms-toggle-track {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+.pms-toggle input:disabled + .pms-toggle-track {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.pms-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: 20px;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: 11px;
+  text-align: center;
+}
+
+.pms-empty-icon {
+  margin-bottom: 8px;
+  color: var(--text-faint);
+  font-size: 1.5rem;
+}
+
+.pms-empty-text {
+  max-width: 230px;
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.pms-edit-modal .pms-modal-label {
+  display: block;
+  margin: 0 0 5px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.pms-edit-modal .pms-modal-input,
+.pms-edit-modal .pms-modal-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.pms-edit-modal .pms-modal-textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.pms-modal-hint {
+  margin: -3px 0 14px;
+  color: var(--text-faint);
+  font-size: 0.7rem;
+}
+
+@media (max-width: 420px) {
+  .pms-view {
+    padding: 10px;
+  }
+
+  .pms-item-main {
+    align-items: flex-start;
+  }
+
+  .pms-actions {
+    flex-wrap: wrap;
+    max-width: 122px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pms-item,
+  .pms-icon-button,
+  .pms-action-button,
+  .pms-pin-button,
+  .pms-delete-button,
+  .pms-toggle-track,
+  .pms-toggle-track::after {
+    transition: none;
+  }
+}
