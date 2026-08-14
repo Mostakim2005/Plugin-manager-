@@ -1,38 +1,38 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
-import MyPlugin from './main';
+import type { PluginManagerSettings } from '../types';
 
-export interface MyPluginSettings {
-	mySetting: string;
-}
-
-export const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default',
+export const DEFAULT_SETTINGS: PluginManagerSettings = {
+  pinned: [],
+  order: [],
+  customNames: {},
+  customDescs: {},
 };
 
-export class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
 
-	constructor(app: App, plugin: MyPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
+function stringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.filter((item): item is string => typeof item === 'string'))];
+}
 
-	display(): void {
-		const { containerEl } = this;
+function stringMap(value: unknown): Record<string, string> {
+  if (!isRecord(value)) return {};
 
-		containerEl.empty();
+  const result: Record<string, string> = {};
+  for (const [key, item] of Object.entries(value)) {
+    if (typeof item === 'string') result[key] = item;
+  }
+  return result;
+}
 
-		new Setting(containerEl)
-			.setName('Settings #1')
-			.setDesc("It's a secret")
-			.addText((text) =>
-				text
-					.setPlaceholder('Enter your secret')
-					.setValue(this.plugin.settings.mySetting)
-					.onChange(async (value) => {
-						this.plugin.settings.mySetting = value;
-						await this.plugin.saveSettings();
-					}),
-			);
-	}
+export function normalizeSettings(data: unknown): PluginManagerSettings {
+  if (!isRecord(data)) return { ...DEFAULT_SETTINGS };
+
+  return {
+    pinned: stringArray(data.pinned),
+    order: stringArray(data.order),
+    customNames: stringMap(data.customNames),
+    customDescs: stringMap(data.customDescs),
+  };
 }
