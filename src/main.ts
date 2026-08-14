@@ -38,7 +38,8 @@ export default class PluginManagerSidebarPlugin extends Plugin {
 
   async activateView(): Promise<void> {
     const { workspace } = this.app;
-    let leaf = workspace.getLeavesOfType(VIEW_TYPE_PLUGIN_MANAGER)[0];
+    let leaf: import('obsidian').WorkspaceLeaf | null =
+      workspace.getLeavesOfType(VIEW_TYPE_PLUGIN_MANAGER)[0] ?? null;
 
     if (!leaf) {
       leaf = workspace.getRightLeaf(false);

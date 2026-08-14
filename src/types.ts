@@ -1,5 +1,3 @@
-import type { PluginManifest } from 'obsidian';
-
 export interface PluginManagerSettings {
   pinned: string[];
   order: string[];
@@ -13,5 +11,4 @@ export interface ManagedPlugin {
   description: string;
   version: string;
   enabled: boolean;
-  manifest: PluginManifest;
 }
