@@ -1,4 +1,4 @@
-import { Plugin, Notice } from 'obsidian';
+import { Notice, Plugin } from 'obsidian';
 import {
   PluginManagerView,
   VIEW_TYPE_PLUGIN_MANAGER,
@@ -19,25 +19,22 @@ export default class PluginManagerSidebarPlugin extends Plugin {
       return new PluginManagerView(leaf, this);
     });
 
-    this.addRibbonIcon('package', 'Open Plugin Manager', () => {
+    this.addRibbonIcon('package', 'Open plugin manager', () => {
       void this.activateView();
     });
 
     this.addCommand({
       id: 'open-plugin-manager',
-      name: 'Open Plugin Manager sidebar',
+      name: 'Open sidebar',
       callback: () => {
         void this.activateView();
       },
     });
   }
 
-  async onunload(): Promise<void> {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_PLUGIN_MANAGER);
-  }
-
   async activateView(): Promise<void> {
     const { workspace } = this.app;
+
     let leaf: import('obsidian').WorkspaceLeaf | null =
       workspace.getLeavesOfType(VIEW_TYPE_PLUGIN_MANAGER)[0] ?? null;
 
@@ -45,7 +42,7 @@ export default class PluginManagerSidebarPlugin extends Plugin {
       leaf = workspace.getRightLeaf(false);
 
       if (!leaf) {
-        new Notice('Unable to create the Plugin Manager view.');
+        new Notice('Unable to create the plugin manager view.');
         return;
       }
 
@@ -55,7 +52,7 @@ export default class PluginManagerSidebarPlugin extends Plugin {
       });
     }
 
-    workspace.revealLeaf(leaf);
+    void workspace.setActiveLeaf(leaf, { focus: true });
   }
 
   async loadSettings(): Promise<void> {
