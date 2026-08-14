@@ -1,4 +1,10 @@
-import { ItemView, Notice, type WorkspaceLeaf } from 'obsidian';
+import {
+  ItemView,
+  Notice,
+  type PluginManifest,
+  type WorkspaceLeaf,
+  type App,
+} from 'obsidian';
 import type PluginManagerSidebarPlugin from '../main';
 import type { ManagedPlugin } from '../types';
 import { EditPluginModal } from '../modals/edit-plugin-modal';
@@ -7,6 +13,23 @@ export const VIEW_TYPE_PLUGIN_MANAGER = 'plugin-manager-view';
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+interface PluginManagerApi {
+  manifests: Record<string, PluginManifest>;
+  enabledPlugins: Set<string>;
+  enablePlugin(id: string): Promise<void>;
+  disablePlugin(id: string): Promise<void>;
+  uninstallPlugin(id: string): Promise<void>;
+}
+
+interface InternalPluginsApi {
+  plugins: Record<string, unknown>;
+}
+
+interface AppWithPluginManager extends App {
+  plugins: PluginManagerApi;
+  internalPlugins: InternalPluginsApi;
 }
 
 export class PluginManagerView extends ItemView {
@@ -168,20 +191,28 @@ export class PluginManagerView extends ItemView {
     }
   }
 
+  private getPluginManager(): PluginManagerApi {
+    return (this.app as AppWithPluginManager).plugins;
+  }
+
+  private getInternalPlugins(): InternalPluginsApi {
+    return (this.app as AppWithPluginManager).internalPlugins;
+  }
+
   private getPlugins(): ManagedPlugin[] {
-    const manifests = this.app.plugins.manifests;
+    const pluginManager = this.getPluginManager();
+    const internalPlugins = this.getInternalPlugins();
     const plugins: ManagedPlugin[] = [];
 
-    for (const [id, manifest] of Object.entries(manifests)) {
-      if (this.app.internalPlugins.plugins[id]) continue;
+    for (const [id, manifest] of Object.entries(pluginManager.manifests)) {
+      if (internalPlugins.plugins[id]) continue;
 
       plugins.push({
         id,
         name: manifest.name,
         description: manifest.description ?? '',
         version: manifest.version,
-        enabled: this.app.plugins.enabledPlugins.has(id),
-        manifest,
+        enabled: pluginManager.enabledPlugins.has(id),
       });
     }
 
@@ -371,9 +402,9 @@ export class PluginManagerView extends ItemView {
 
     try {
       if (input.checked) {
-        await this.app.plugins.enablePlugin(plugin.id);
+        await this.getPluginManager().enablePlugin(plugin.id);
       } else {
-        await this.app.plugins.disablePlugin(plugin.id);
+        await this.getPluginManager().disablePlugin(plugin.id);
       }
 
       new Notice(
@@ -436,7 +467,7 @@ export class PluginManagerView extends ItemView {
     if (!confirmed) return;
 
     try {
-      await this.app.plugins.uninstallPlugin(plugin.id);
+      await this.getPluginManager().uninstallPlugin(plugin.id);
 
       delete this.plugin.settings.customNames[plugin.id];
       delete this.plugin.settings.customDescs[plugin.id];
