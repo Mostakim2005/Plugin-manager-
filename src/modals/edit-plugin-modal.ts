@@ -26,6 +26,7 @@ export class EditPluginModal extends Modal {
     contentEl.addClass('pms-edit-modal');
 
     contentEl.createEl('h2', { text: 'Edit plugin details' });
+    contentEl.createDiv({ text: `Original name: ${this.pluginName}`, cls: 'pms-modal-original' });
 
     contentEl.createEl('label', {
       text: 'Display name',
@@ -51,8 +52,26 @@ export class EditPluginModal extends Modal {
     });
 
     contentEl.createDiv({
-      text: 'Leave a field empty to use the plugin’s original value.',
+      text: 'Clear a field to restore the original plugin value.',
       cls: 'pms-modal-hint',
+    });
+
+    const resetNameButton = contentEl.createEl('button', {
+      text: 'Reset name',
+      cls: 'pms-modal-reset',
+      attr: { type: 'button' },
+    });
+    resetNameButton.addEventListener('click', () => {
+      nameInput.value = '';
+    });
+
+    const resetDescriptionButton = contentEl.createEl('button', {
+      text: 'Reset description',
+      cls: 'pms-modal-reset',
+      attr: { type: 'button' },
+    });
+    resetDescriptionButton.addEventListener('click', () => {
+      descriptionInput.value = '';
     });
 
     const buttons = contentEl.createDiv('modal-button-container');
